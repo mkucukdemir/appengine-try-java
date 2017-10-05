@@ -17,9 +17,16 @@
         $(document).ready(function ()
         {
             $('#about').click(showToast);
-            //$.getJSON('/demo', function(data) {
-            //    $('#result').html("Hello, " + data.name);
-            //});
+            $('#buttonEnc').click(function(){
+                $.post( "encryption", { plain: $('#plain-text').val(), magic: $('#magicNumber').val(), alphabet: $('#alphabet').val() }, function( data ) {
+                   $('#cipher').val(data.uiMessage);
+                } );
+            });
+            $('#buttonDec').click(function(){
+                $.post( "decryption", { cipher: $('#cipher-text').val(), magic: $('#magicNumber').val(), alphabet: $('#alphabet').val() }, function( data ) {
+                   $('#plain').val(data.uiMessage);
+                } );
+            });
         });
         function showToast ()
         {
@@ -82,7 +89,7 @@
                             <div class="form-group">
                                 <label for="plain-text">Write your plain-text:</label>
                                 <textarea class="form-control" rows="9" id="plain-text"></textarea>
-                                <button type="button" class="btn btn-primary btn-block btn-sm">Encrypt the text!</button>
+                                <button id="buttonEnc" type="button" class="btn btn-primary btn-block btn-sm">Encrypt the text!</button>
                                 <textarea class="form-control" rows="9" id="cipher"></textarea>
                             </div>
                         </div>
@@ -92,7 +99,7 @@
                             <div class="form-group">
                                 <label for="cipher-text">Write your cipher-text:</label>
                                 <textarea class="form-control" rows="9" id="cipher-text"></textarea>
-                                <button type="button" class="btn btn-primary btn-block btn-sm">Decrypt the text!</button>
+                                <button id="buttonDec" type="button" class="btn btn-primary btn-block btn-sm">Decrypt the text!</button>
                                 <textarea class="form-control" rows="9" id="plain"></textarea>
                             </div>
                         </div>
@@ -102,14 +109,14 @@
                             <div class="form-group">
                                 <label for="alphabet">Alphabet</label>
                                 <select class="form-control" id="alphabet" aria-describedby="alphabetInfo">
-                                    <option>TR</option>
-                                    <option>ENG</option>
+                                    <option value="TR" selected>TR</option>
+                                    <option value="ENG">ENG</option>
                                 </select>
                                 <small id="alphabetInfo" class="form-text text-muted">&nbsp;Alphabet used in both plain-text and cipher-text</small>
                             </div>
                             <div class="form-group">
                                 <label for="magicNumber">Magic Number</label>
-                                <input type="text" class="form-control" id="magicNumber" aria-describedby="magicNumberInfo" placeholder="Write an integer">
+                                <input type="text" class="form-control" id="magicNumber" aria-describedby="magicNumberInfo" placeholder="Write an integer" value="1">
                                 <small id="magicNumberInfo" class="form-text text-muted">&nbsp;Alphabet is shifted with respect to the given number</small>
                             </div>
                         </div>

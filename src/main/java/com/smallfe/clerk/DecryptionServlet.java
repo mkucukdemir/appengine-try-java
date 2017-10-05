@@ -5,6 +5,9 @@
  */
 package com.smallfe.clerk;
 
+import com.google.gson.Gson;
+import com.smallfe.clerk.model.UIMessage;
+import com.smallfe.clerk.util.CryptoUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -68,7 +71,34 @@ public class DecryptionServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-    processRequest(request, response);
+    response.setContentType("application/json;charset=UTF-8");
+    Gson gson = new Gson();
+    PrintWriter out = response.getWriter();
+    String cipherText = request.getParameter("cipher");
+    String alphabet = request.getParameter("alphabet");
+    Integer magic = new Integer(-1);
+    String plainText = new String();
+    UIMessage uiMessage;
+    try {
+      magic = new Integer(request.getParameter("magic"));
+    } catch (NumberFormatException e) {
+      uiMessage = new UIMessage(UIMessageStatus.ERROR, "Magic cannot be parsed");
+      out.print(gson.toJson(uiMessage));
+      out.flush();
+      return;
+    }
+    try {
+      plainText = CryptoUtils.decrypt(cipherText, magic, alphabet);
+      uiMessage = new UIMessage(UIMessageStatus.OK, plainText);
+      out.print(gson.toJson(uiMessage));
+      out.flush();
+      return;
+    } catch (Exception e) {
+      uiMessage = new UIMessage(UIMessageStatus.ERROR, "Decryption error");
+      out.print(gson.toJson(uiMessage));
+      out.flush();
+      return;
+    }
   }
 
   /**
