@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title>Clerk</title>
     <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
     <script src="vendor/jquery/jquery.js"></script>
@@ -18,19 +17,39 @@
         {
             $('#about').click(showToast);
             $('#buttonEnc').click(function(){
+                var $this = $(this);
+                $this.button('loading');
                 $.post( "encryption", { plain: $('#plain-text').val(), magic: $('#magicNumber').val(), alphabet: $('#alphabet').val() }, function( data ) {
-                   $('#cipher').val(data.uiMessage);
-                } );
+                    if(data.uiMessageStatus=="OK")
+                        $('#cipher').val(data.uiMessage);
+                    else if(data.uiMessageStatus=="ERROR")
+                        $.toaster({ priority : "danger", title : "Error", message : data.uiMessage });
+                    else if(data.uiMessageStatus=="WARNING")
+                        $.toaster({ priority : "warning", title : "Warning", message : data.uiMessage });
+                } )
+                .always(function() {
+                   $this.button('reset');
+                });
             });
             $('#buttonDec').click(function(){
+                var $this = $(this);
+                $this.button('loading');
                 $.post( "decryption", { cipher: $('#cipher-text').val(), magic: $('#magicNumber').val(), alphabet: $('#alphabet').val() }, function( data ) {
-                   $('#plain').val(data.uiMessage);
-                } );
+                   if(data.uiMessageStatus=="OK")
+                        $('#plain').val(data.uiMessage);
+                    else if(data.uiMessageStatus=="ERROR")
+                        $.toaster({ priority : "danger", title : "Error", message : data.uiMessage });
+                    else if(data.uiMessageStatus=="WARNING")
+                        $.toaster({ priority : "warning", title : "Warning", message : data.uiMessage });
+                } )
+                .always(function() {
+                   $this.button('reset');
+                });
             });
         });
         function showToast ()
         {
-            var priority = 'success';
+            var priority = 'info';
             var title    = 'Visit';
             var message  = 'github.com/mkucukdemir';
 
@@ -89,7 +108,7 @@
                             <div class="form-group">
                                 <label for="plain-text">Write your plain-text:</label>
                                 <textarea class="form-control" rows="9" id="plain-text"></textarea>
-                                <button id="buttonEnc" type="button" class="btn btn-primary btn-block btn-sm">Encrypt the text!</button>
+                                <button id="buttonEnc" type="button" class="btn btn-primary btn-block btn-sm" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing">Encrypt the text!</button>
                                 <textarea class="form-control" rows="9" id="cipher"></textarea>
                             </div>
                         </div>
@@ -99,7 +118,7 @@
                             <div class="form-group">
                                 <label for="cipher-text">Write your cipher-text:</label>
                                 <textarea class="form-control" rows="9" id="cipher-text"></textarea>
-                                <button id="buttonDec" type="button" class="btn btn-primary btn-block btn-sm">Decrypt the text!</button>
+                                <button id="buttonDec" type="button" class="btn btn-primary btn-block btn-sm" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing">Decrypt the text!</button>
                                 <textarea class="form-control" rows="9" id="plain"></textarea>
                             </div>
                         </div>
@@ -110,13 +129,13 @@
                                 <label for="alphabet">Alphabet</label>
                                 <select class="form-control" id="alphabet" aria-describedby="alphabetInfo">
                                     <option value="TR" selected>TR</option>
-                                    <option value="ENG">ENG</option>
+                                    <option value="EN">ENG</option>
                                 </select>
                                 <small id="alphabetInfo" class="form-text text-muted">&nbsp;Alphabet used in both plain-text and cipher-text</small>
                             </div>
                             <div class="form-group">
                                 <label for="magicNumber">Magic Number</label>
-                                <input type="text" class="form-control" id="magicNumber" aria-describedby="magicNumberInfo" placeholder="Write an integer" value="1">
+                                <input type="number" class="form-control" id="magicNumber" aria-describedby="magicNumberInfo" placeholder="Write an integer" value="1">
                                 <small id="magicNumberInfo" class="form-text text-muted">&nbsp;Alphabet is shifted with respect to the given number</small>
                             </div>
                         </div>

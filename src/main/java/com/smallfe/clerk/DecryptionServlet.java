@@ -10,6 +10,7 @@ import com.smallfe.clerk.model.UIMessage;
 import com.smallfe.clerk.util.CryptoUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -82,13 +83,13 @@ public class DecryptionServlet extends HttpServlet {
     try {
       magic = new Integer(request.getParameter("magic"));
     } catch (NumberFormatException e) {
-      uiMessage = new UIMessage(UIMessageStatus.ERROR, "Magic cannot be parsed");
+      uiMessage = new UIMessage(UIMessageStatus.WARNING, "Magic number cannot be parsed");
       out.print(gson.toJson(uiMessage));
       out.flush();
       return;
     }
     try {
-      plainText = CryptoUtils.decrypt(cipherText, magic, alphabet);
+      plainText = CryptoUtils.decrypt(cipherText.toUpperCase(new Locale(alphabet)), magic, alphabet);
       uiMessage = new UIMessage(UIMessageStatus.OK, plainText);
       out.print(gson.toJson(uiMessage));
       out.flush();
