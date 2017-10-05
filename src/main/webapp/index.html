@@ -1,18 +1,122 @@
 <!doctype html>
 <html>
-  <head>
-    <title>App Engine Demo</title>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-  </head>
-  <body>
-    <div id="result">Loading...</div>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
+    <title>Clerk</title>
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
+    <script src="vendor/jquery/jquery.js"></script>
+    <script src="vendor/popper/popper.js"></script>
+    <script src="vendor/jquery/jquery.toaster.js"></script>
+    <link href="vendor/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="vendor/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script>
-$(document).ready(function() {
-  $.getJSON('/demo', function(data) {
-    $('#result').html("Hello, " + data.name);
-  });
-});
+        $(document).ready(function ()
+        {
+            $('#about').click(showToast);
+            //$.getJSON('/demo', function(data) {
+            //    $('#result').html("Hello, " + data.name);
+            //});
+        });
+        function showToast ()
+        {
+            var priority = 'success';
+            var title    = 'Visit';
+            var message  = 'github.com/mkucukdemir';
+
+            $.toaster({ priority : priority, title : title, message : message });
+        }
     </script>
+    <style>
+        body {
+            background: url("img/background_tr.jpg") no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            background-size: cover;
+            -o-background-size: cover;
+        }
+        textarea { resize:none; }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="./">Clerk</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="active"><a href="./">Home <span class="sr-only">(current)</span></a></li>
+                    <li><a href="#" id="about">About</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+    </nav>
+    
+    <!-- Page Content -->
+    <div class="container" style="margin-top: 80px">
+        <div class="row">
+            <div>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active" style="width: 33.34%;text-align: center"><a href="#encryption" aria-controls="home" role="tab" data-toggle="tab">Encryption</a></li>
+                    <li role="presentation" style="width: 33.34%;text-align: center"><a href="#decryption" aria-controls="profile" role="tab" data-toggle="tab">Decryption</a></li>
+                    <li role="presentation" style="width: 33.32%;text-align: center"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="encryption">
+                        <div style="min-height: 500px;background-color: #ffffff;opacity: 0.8;padding: 10px">
+                            <div class="form-group">
+                                <label for="plain-text">Write your plain-text:</label>
+                                <textarea class="form-control" rows="9" id="plain-text"></textarea>
+                                <button type="button" class="btn btn-primary btn-block btn-sm">Encrypt the text!</button>
+                                <textarea class="form-control" rows="9" id="cipher"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="decryption">
+                        <div style="min-height: 500px;background-color: #ffffff;opacity: 0.8;padding: 10px">
+                            <div class="form-group">
+                                <label for="cipher-text">Write your cipher-text:</label>
+                                <textarea class="form-control" rows="9" id="cipher-text"></textarea>
+                                <button type="button" class="btn btn-primary btn-block btn-sm">Decrypt the text!</button>
+                                <textarea class="form-control" rows="9" id="plain"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="settings">
+                        <div style="min-height: 500px;background-color: #ffffff;opacity: 0.8;padding: 10px">
+                            <div class="form-group">
+                                <label for="alphabet">Alphabet</label>
+                                <select class="form-control" id="alphabet" aria-describedby="alphabetInfo">
+                                    <option>TR</option>
+                                    <option>ENG</option>
+                                </select>
+                                <small id="alphabetInfo" class="form-text text-muted">&nbsp;Alphabet used in both plain-text and cipher-text</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="magicNumber">Magic Number</label>
+                                <input type="text" class="form-control" id="magicNumber" aria-describedby="magicNumberInfo" placeholder="Write an integer">
+                                <small id="magicNumberInfo" class="form-text text-muted">&nbsp;Alphabet is shifted with respect to the given number</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
   </body>
 </html>
